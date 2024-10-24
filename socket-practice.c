@@ -47,7 +47,9 @@ int main(int argc, char const *argv[])
     int new_socket = accept(remote, (struct sockaddr *)&addr, &clientLen);
 
     ssize_t valread = read(new_socket, buffer, 2024 - 1);
-    send(new_socket, "hello", strlen("hello"), 0);
+    FILE *file_fd = fopen("pwn.txt", "r");
+    char chunk[1024];
+    send(new_socket, fgets(chunk, sizeof(chunk), file_fd), sizeof(chunk), 0);
     printf("%s", buffer);
   }
 }
