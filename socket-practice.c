@@ -29,23 +29,25 @@ int main(int argc, char const *argv[])
   // announce abillity to accept conn (listen)
   // Block incoming conn until con request arrives (accept)
   // Establish connection (connect )
-  struct sockaddr_in addr = {0};
+  struct sockaddr_in addr = {0}; //  IP and PORT struct
   addr.sin_family = AF_INET;
-  addr.sin_addr.s_addr = htonl(INADDR_ANY);
-  addr.sin_port = htons(12345);
+  addr.sin_addr.s_addr = htonl(INADDR_ANY); // Unit conversion
+  addr.sin_port = htons(12345);             // Unit conversion
 
-  int remote = socket(AF_INET, SOCK_STREAM, 0);
-  bind(remote, (struct sockaddr *)&addr, sizeof(addr));
-  listen(remote, 3);
+  int remote = socket(AF_INET, SOCK_STREAM, 0);         // Create socket (IPv4 and TCP)
+  bind(remote, (struct sockaddr *)&addr, sizeof(addr)); // Bind socket to ADDR and PORT
+  listen(remote, 3);                                    // Listen for conn
 
   while (1)
   {
     printf("%s", "Waiting for incoming connections...\n");
     char buffer[1024];
-    int clientLen = sizeof(struct sockaddr_in *);
+
+    int clientLen = sizeof(struct sockaddr_in *); // IDK max input size
     int new_socket = accept(remote, (struct sockaddr *)&addr, &clientLen);
 
-    ssize_t valread = read(new_socket, buffer, 1024 - 1);
+    ssize_t valread = read(new_socket, buffer, 2024 - 1);
+    send(new_socket, "hello", strlen("hello"), 0);
     printf("%s", buffer);
   }
 }
