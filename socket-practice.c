@@ -37,19 +37,21 @@ int main(int argc, char const *argv[])
   int remote = socket(AF_INET, SOCK_STREAM, 0);         // Create socket (IPv4 and TCP)
   bind(remote, (struct sockaddr *)&addr, sizeof(addr)); // Bind socket to ADDR and PORT
   listen(remote, 3);                                    // Listen for conn
+  int size;
+  char *text = NULL;
+  scanf("%d", &size);
+  text = (char *)malloc(size * sizeof(char));
+  printf("Enter Size: ");
+
+  printf("\n Enter Text: ");
+  scanf("%s", text);
 
   while (1)
   {
     printf("%s", "Waiting for incoming connections...\n");
-    char buffer[1024];
-
     int clientLen = sizeof(struct sockaddr_in *); // IDK max input size
     int new_socket = accept(remote, (struct sockaddr *)&addr, &clientLen);
 
-    ssize_t valread = read(new_socket, buffer, 2024 - 1);
-    FILE *file_fd = fopen("pwn.txt", "r");
-    char chunk[1024];
-    send(new_socket, fgets(chunk, sizeof(chunk), file_fd), sizeof(chunk), 0);
-    printf("%s", buffer);
+    send(new_socket, text, sizeof(text), 0);
   }
 }
